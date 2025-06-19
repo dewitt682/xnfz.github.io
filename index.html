@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟仿真平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #8B0000;
+            --secondary-color: #A52A2A;
+            --accent-color: #FF4500;
+            --light-color: #FFF8F0;
+            --dark-color: #1A1A1A;
+            --transition: all 0.4s ease;
+        }
+
+        body {
+            font-family: 'Roboto', 'Noto Serif SC', sans-serif;
+            background-color: #f9f5f2;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 顶部导航样式 */
+        header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: fadeInDown 1s ease;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo i {
+            color: var(--light-color);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 30px;
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Banner视频样式 */
+        .banner {
+            position: relative;
+            height: 70vh;
+            overflow: hidden;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(139, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+
+        .banner-overlay h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+            animation: fadeInUp 1s ease;
+        }
+
+        .banner-overlay p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin-bottom: 30px;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 14px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            animation: fadeInUp 1.4s ease;
+            box-shadow: 0 4px 15px rgba(255, 69, 0, 0.4);
+        }
+
+        .btn:hover {
+            background: #ff5c33;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 69, 0, 0.6);
+        }
+
+        /* 描述部分样式 */
+        .description {
+            padding: 70px 0;
+            text-align: center;
+            background: white;
+            margin-bottom: 50px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transform: translateY(-30px);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        .description h2 {
+            color: var(--primary-color);
+            font-size: 2.8rem;
+            margin-bottom: 25px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .description h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .description p {
+            font-size: 1.3rem;
+            max-width: 900px;
+            margin: 0 auto 30px;
+            color: #555;
+        }
+
+        /* 图片块样式 */
+        .image-blocks {
+            padding: 40px 0 70px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        .image-blocks h2 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .image-card {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            transition: var(--transition);
+            position: relative;
+            background: white;
+        }
+
+        .image-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 35px rgba(139, 0, 0, 0.25);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .image-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-content {
+            padding: 25px;
+        }
+
+        .image-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+        }
+
+        .image-content p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* 长方形块样式 */
+        .rect-blocks {
+            padding: 0 0 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.7s;
+        }
+
+        .rect-blocks h2 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .rect-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .rect-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .rect-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 12px 30px rgba(139, 0, 0, 0.2);
+        }
+
+        .rect-img {
+            flex: 0 0 40%;
+        }
+
+        .rect-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .rect-card:hover .rect-img img {
+            transform: scale(1.05);
+        }
+
+        .rect-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .rect-content h3 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .rect-content p {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        /* 底部样式 */
+        footer {
+            background: linear-gradient(to right, var(--dark-color), #2a0a0a);
+            color: white;
+            padding: 50px 0 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--light-color);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .social-icons {
+            margin: 30px 0;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin: 0 10px;
+            color: white;
+            font-size: 1.4rem;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+
+        /* 动画关键帧 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .banner-overlay h1 {
+                font-size: 3rem;
+            }
+            
+            .image-container {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 0;
+            }
+            
+            .header-content {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+            
+            .banner-overlay h1 {
+                font-size: 2.5rem;
+            }
+            
+            .banner-overlay p {
+                font-size: 1.2rem;
+            }
+            
+            .description {
+                padding: 50px 0;
+            }
+            
+            .image-card {
+                min-width: 100%;
+            }
+            
+            .rect-card {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部标题 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                北京城市学院未来影像中心虚拟仿真平台
+            </div>
+        </div>
+    </header>
+
+    <!-- Banner视频部分 -->
+    <section class="banner">
+        <div class="video-container">
+            <!-- 使用占位视频，实际使用时替换为真实视频 -->
+            <video autoplay muted loop playsinline>
+                <source src="https://assets.codepen.io/3364143/screen-16_9.mp4" type="video/mp4">
+                您的浏览器不支持视频标签。
+            </video>
+        </div>
+        <div class="banner-overlay">
+            <h1>网站仍在优化中，请稍后</h1>
+            <p>网站仍在优化中，请稍后</p>
+            <a href="#" class="btn">观看案例视频 <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- 描述部分 -->
+    <section class="description">
+        <div class="container">
+            <h2>关于本项目</h2>
+            <p>文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试</p>
+            <p>文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试</p>
+        </div>
+    </section>
+
+    <!-- 图片块部分 -->
+    <section class="image-blocks">
+        <div class="container">
+            <h2>项目亮点</h2>
+            <div class="image-container">
+                <div class="image-card">
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80" alt="设计案例">
+                    <div class="image-content">
+                        <h3>亮点1</h3>
+                        <p>文本测试文本测试文本测试文本测试文本测试</p>
+                        <a href="#" class="btn">查看详情</a>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80" alt="设计案例">
+                    <div class="image-content">
+                        <h3>亮点2</h3>
+                        <p>文本测试文本测试文本测试文本测试文本测试</p>
+                        <a href="#" class="btn">查看详情</a>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80" alt="设计案例">
+                    <div class="image-content">
+                        <h3>亮点3</h3>
+                        <p>文本测试文本测试文本测试文本测试文本测试</p>
+                        <a href="#" class="btn">查看详情</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 长方形块部分 -->
+    <section class="rect-blocks">
+        <div class="container">
+            <h2>其他优势</h2>
+            <div class="rect-container">
+                <div class="rect-card">
+                    <div class="rect-img">
+                        <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80" alt="UI/UX设计">
+                    </div>
+                    <div class="rect-content">
+                        <h3>UI/UX设计</h3>
+                        <p>我们创建直观、美观的用户界面和流畅的用户体验，确保您的数字产品不仅外观出色，而且易于使用。从用户研究到原型设计，再到最终实施，我们全程参与。</p>
+                        <a href="#" class="btn">了解更多</a>
+                    </div>
+                </div>
+                <div class="rect-card">
+                    <div class="rect-img">
+                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80" alt="网站开发">
+                    </div>
+                    <div class="rect-content">
+                        <h3>网站开发</h3>
+                        <p>我们构建高性能、响应式的网站，采用最新的前端技术和强大的后端架构。无论是企业官网、电子商务平台还是复杂的Web应用，我们都能提供专业解决方案。</p>
+                        <a href="#" class="btn">了解更多</a>
+                    </div>
+                </div>
+                <div class="rect-card">
+                    <div class="rect-img">
+                        <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80" alt="品牌策略">
+                    </div>
+                    <div class="rect-content">
+                        <h3>品牌策略</h3>
+                        <p>我们帮助您定义和传达独特的品牌故事，创建一致的视觉识别系统，并在所有客户接触点建立强大的品牌影响力，使您的品牌在市场中脱颖而出。</p>
+                        <a href="#" class="btn">了解更多</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部版权信息 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    北京城市学院未来影像中心
+                </div>
+                <p>文本测试文本测试文本测试文本测试文本测试</p>
+                
+                <div class="copyright">
+                    &copy; 2024 北京城市学院未来影像中心。
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 简单的滚动动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = "1";
+                        entry.target.style.transform = "translateY(0)";
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            const sections = document.querySelectorAll('.description, .image-blocks, .rect-blocks');
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            // 添加按钮悬停效果
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
