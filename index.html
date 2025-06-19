@@ -6,11 +6,12 @@
     <title>虚拟仿真平台</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <style>
+<style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: sans-serif;
         }
 
         :root {
@@ -50,19 +51,20 @@
 
         .header-content {
             display: flex;
-            justify-content: center;
+            justify-content:center;
             align-items: center;
         }
 
         .logo {
-            
             font-size: 2.2rem;
             font-weight: 700;
             letter-spacing: 1px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-top: 10px;
         }
 
         .logo i {
+            margin-right: 10px;
             color: var(--light-color);
         }
 
@@ -250,6 +252,7 @@
             object-fit: cover;
             display: block;
             transition: var(--transition);
+            cursor: pointer;
         }
 
         .image-card:hover img {
@@ -269,6 +272,70 @@
         .image-content p {
             color: #666;
             margin-bottom: 20px;
+        }
+
+        /* 新增的浮动图片区域 */
+        .gallery-section {
+            padding: 40px 0;
+            background: white;
+            margin-bottom: 50px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .gallery-section h2 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .gallery-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .gallery-item {
+            width: calc(25% - 20px);
+            min-width: 200px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 25px rgba(139, 0, 0, 0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
         }
 
         /* 长方形块样式 */
@@ -407,6 +474,59 @@
             font-size: 1.1rem;
         }
 
+        /* 图片模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(255, 69, 0, 0.6);
+        }
+
+        .modal-caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            text-align: center;
+            color: white;
+            padding: 20px 0;
+            font-size: 1.2rem;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--accent-color);
+            transform: rotate(90deg);
+        }
+
         /* 动画关键帧 */
         @keyframes fadeInUp {
             from {
@@ -430,14 +550,27 @@
             }
         }
 
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
         /* 响应式设计 */
         @media (max-width: 992px) {
             .banner-overlay h1 {
                 font-size: 3rem;
             }
             
-            .image-container {
+            .image-container, .gallery-row {
                 gap: 20px;
+            }
+            
+            .gallery-item {
+                width: calc(33.33% - 20px);
             }
         }
 
@@ -470,13 +603,22 @@
                 padding: 50px 0;
             }
             
-            .image-card {
+            .image-card, .gallery-item {
                 min-width: 100%;
+                width: 100%;
             }
             
             .rect-card {
                 flex-direction: column;
             }
+            
+            .rect-img {
+                flex: 0 0 100%;
+            }
+
+          #byxblogo{
+            size: 20px;
+          }
         }
     </style>
 </head>
@@ -495,13 +637,13 @@
         <div class="video-container">
             <!-- 使用占位视频，实际使用时替换为真实视频 -->
             <video autoplay muted loop playsinline>
-                <source src="https://assets.codepen.io/3364143/screen-16_9.mp4" type="video/mp4">
+                <source src="images/play.mp4" type="video/mp4">
                 您的浏览器不支持视频标签。
             </video>
         </div>
         <div class="banner-overlay">
-            <h1>网站仍在优化中，请稍后</h1>
-            <p>网站仍在优化中，请稍后</p>
+            <h1>重塑摄影教育边界：数字孪生技术赋能摄影教学新范式</h1>
+            <p>一室藏寰宇，方寸见万千</p>
             <a href="#" class="btn">观看案例视频 <i class="fas fa-arrow-right"></i></a>
         </div>
     </section>
@@ -509,9 +651,8 @@
     <!-- 描述部分 -->
     <section class="description">
         <div class="container">
-            <h2>关于本项目</h2>
-            <p>文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试</p>
-            <p>文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试</p>
+            <h2>项目简介</h2>
+            <p>在数字技术重塑摄影教育的时代，北京城市学院融合人工智能与虚拟现实技术，打造国内首个「摄影数字孪生智慧教学平台」。北京城市学院表演学部未来影像中心推出“摄影数字孪生智慧教学平台”，通过跨时空动态场景引擎、1:1高保真设备库、AI智能导学系统三大技术支柱，构建“春课冬景，斗室寰球”的教学新生态。</p>
         </div>
     </section>
 
@@ -521,68 +662,126 @@
             <h2>项目亮点</h2>
             <div class="image-container">
                 <div class="image-card">
-                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80" alt="设计案例">
+                    <img src="images/i.jpg" alt="场景无界">
                     <div class="image-content">
-                        <h3>亮点1</h3>
-                        <p>文本测试文本测试文本测试文本测试文本测试</p>
-                        <a href="#" class="btn">查看详情</a>
+                        <h3>场景无界</h3>
+                        <p>教学场景数字化，突破时空制约，搭建跨时空动态场景系统，复现不可及拍摄场景。</p>
+                        
                     </div>
                 </div>
                 <div class="image-card">
-                    <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80" alt="设计案例">
+                    <img src="images/b2.jpg" alt="思政注魂">
                     <div class="image-content">
-                        <h3>亮点2</h3>
-                        <p>文本测试文本测试文本测试文本测试文本测试</p>
-                        <a href="#" class="btn">查看详情</a>
+                        <h3>思政注魂</h3>
+                        <p>价值引领具象化，深化育人成效，AI智能导学系统将课程思政融入创作全流程。</p>
+                        
                     </div>
                 </div>
                 <div class="image-card">
-                    <img src="https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80" alt="设计案例">
+                    <img src="images/jhkj.jpg" alt="设备无忧">
                     <div class="image-content">
-                        <h3>亮点3</h3>
-                        <p>文本测试文本测试文本测试文本测试文本测试</p>
-                        <a href="#" class="btn">查看详情</a>
+                        <h3>设备无忧</h3>
+                        <p>资源设备云端化，降低实训门槛，1：1数字复刻无人机等高端设备器材。</p>
+                        
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+
+          <section class="gallery-section">
+        <div class="container">
+            <h2>部分仿真内容展示</h2>
+            <div class="gallery-row">
+                <div class="gallery-item">
+                    <img src="images/a1.jpg" alt="红色记忆" onclick="openModal(this)">
+                    <div class="gallery-caption">红色记忆</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/b.jpg" alt="破晓宣言" onclick="openModal(this)">
+                    <div class="gallery-caption">破晓宣言</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/c.jpg" alt="南湖红船" onclick="openModal(this)">
+                    <div class="gallery-caption">南湖红船</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/d.jpg" alt="问鼎九天" onclick="openModal(this)">
+                    <div class="gallery-caption">问鼎九天</div>
+                </div>
+            </div>
+            
+            <!-- 新增的浮动图片区域 - 第二排 -->
+            <div class="gallery-row">
+                <div class="gallery-item">
+                    <img src="images/e.jpg" alt="地下长城" onclick="openModal(this)">
+                    <div class="gallery-caption">地下长城</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/f.jpg" alt="雪山航拍仿真训练" onclick="openModal(this)">
+                    <div class="gallery-caption">雪山航拍仿真训练</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/g.jpg" alt="峡谷航拍仿真训练" onclick="openModal(this)">
+                    <div class="gallery-caption">峡谷航拍仿真训练</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/h.jpg" alt="山脉航拍仿真训练" onclick="openModal(this)">
+                    <div class="gallery-caption">山脉航拍仿真训练</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
     <!-- 长方形块部分 -->
     <section class="rect-blocks">
         <div class="container">
-            <h2>其他优势</h2>
+            <h2>项目已有基础及经验</h2>
             <div class="rect-container">
                 <div class="rect-card">
                     <div class="rect-img">
-                        <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80" alt="UI/UX设计">
+                        <img src="images/szzc.png" alt="UI/UX设计">
                     </div>
                     <div class="rect-content">
-                        <h3>优势1</h3>
-                        <p>文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试</p>
-                        <a href="#" class="btn">了解更多</a>
+                        <h3>全域数字资库</h3>
+                        <p>汇聚海量高品质的数字素材资源，为师生教学实践、项目创作提供强大、便捷的资源支持，激发无限创意可能。</p>
+                       
                     </div>
                 </div>
                 <div class="rect-card">
                     <div class="rect-img">
-                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80" alt="网站开发">
+                        <img src="images/lmt.png" alt="网站开发">
                     </div>
                     <div class="rect-content">
-                        <h3>优势2</h3>
-                        <p>文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试</p>
-                        <a href="#" class="btn">了解更多</a>
+                        <h3>流媒体教学平台</h3>
+                        <p>打破时空限制，赋能高效学习。流媒体平台支持课程直播、点播回放、远程互动教学，实现优质教学资源的实时共享与灵活获取，助力影像教学模式的创新与拓展。</p>
+                        
                     </div>
                 </div>
                 <div class="rect-card">
                     <div class="rect-img">
-                        <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80" alt="品牌策略">
+                        <img src="images/znt.png" alt="品牌策略">
                     </div>
                     <div class="rect-content">
-                        <h3>优势3</h3>
-                        <p>文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试</p>
-                        <a href="#" class="btn">了解更多</a>
+                        <h3>学习助手智能体</h3>
+                        <p>24小时智能学习伙伴。基于人工智能技术，学习助手提供智能答疑、学习路径推荐、资源精准推送、创作辅助建议等个性化服务，让学习更高效、更自主。</p>
+                       
                     </div>
                 </div>
+
+                 <div class="rect-card">
+                    <div class="rect-img">
+                        <img src="images/jidi.png" alt="品牌策略">
+                    </div>
+                    <div class="rect-content">
+                        <h3>校企共建基地</h3>
+                        <p>连接课堂与产业的前沿阵地。携手行业领先企业共建实践基地，引入真实项目、产业前沿技术和行业导师，为学生提供沉浸式实践平台，培养符合市场需求的实战型人才，实现校企协同育人与贯通衔接。</p>
+                       
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -594,14 +793,21 @@
                 <div class="footer-logo">
                     北京城市学院未来影像中心
                 </div>
-                <p>文本测试文本测试文本测试文本测试文本测试</p>
-                
+                 <img id = "byxblogo" src="images/logo.png" height="130px">
+                 <p>北京城市学院表演学部  虚拟制作专业  摄影数字孪生智慧教学平台</p>
+                 <p></p>
+                <p>&MediumSpace;</p>
                 <div class="copyright">
-                    &copy; 2024 北京城市学院未来影像中心。
-                </div>
+                    &copy; 2025 北京城市学院未来影像中心
+                </div> 
             </div>
         </div>
     </footer>
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="caption" class="modal-caption"></div>
+    </div>
 
     <script>
         // 简单的滚动动画效果
@@ -622,7 +828,7 @@
                 });
             }, observerOptions);
             
-            const sections = document.querySelectorAll('.description, .image-blocks, .rect-blocks');
+            const sections = document.querySelectorAll('.description, .image-blocks, .gallery-section, .rect-blocks');
             sections.forEach(section => {
                 observer.observe(section);
             });
@@ -638,6 +844,35 @@
                     this.style.transform = 'translateY(0)';
                 });
             });
+        });
+
+        // 图片模态框功能
+        function openModal(img) {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImage");
+            const captionText = document.getElementById("caption");
+            
+            modal.style.display = "block";
+            modalImg.src = img.src;
+            captionText.innerHTML = img.alt;
+            
+            // 点击模态框外部关闭
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+        }
+
+        function closeModal() {
+            document.getElementById("imageModal").style.display = "none";
+        }
+        
+        // 按ESC键关闭模态框
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeModal();
+            }
         });
     </script>
 </body>
